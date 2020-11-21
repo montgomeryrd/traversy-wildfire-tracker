@@ -4,7 +4,7 @@ import Map from './components/Map';
 function App() {
   const [eventData, setEventData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true)
@@ -20,7 +20,7 @@ function App() {
 
   return (
     <div>
-      <Map />
+      { !loading ? <Map eventData={eventData} /> : <h1 className="loading">creating wildfires...</h1> }
     </div>
   );
 }

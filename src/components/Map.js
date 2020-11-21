@@ -1,19 +1,32 @@
+import { useState } from 'react';
 import GoogleMapReact from 'google-map-react';
 import LocationMarker from './LocationMarker';
+import LocationInfoBox from './LocationInfoBox';
 
-const Map = ({ center, zoom }) => {
+const Map = ({ eventData, center, zoom }) => {
+    const [locationInfo, setLocationInfo] = useState(null);
+
+    const markers = eventData.map(e => {
+        if (e.categories[0].id === 8) {
+            return <LocationMarker 
+                lat={e.geometries[0].coordinates[1]}
+                lng={e.geometries[0].coordinates[0]}
+                onClick={() => setLocationInfo({ title: e.title })}
+            />
+        }
+        return null;
+    });   
+    
     return (
         <div className="map">
             <GoogleMapReact
-                bootstrapURLKeys={{ key: 'AIzaSyDjLYDx7DqRyIG0iQuXgTPG1oTGqcND7uk' }}
+                bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_API_KEY }}
                 defaultCenter={ center}
                 defaultZoom={ zoom }
             >
-            <LocationMarker 
-                lat={center.lat}
-                lng={center.lng}
-            />
+                { markers }
             </GoogleMapReact>
+            { locationInfo && <LocationInfoBox info={locationInfo} /> }
         </div>
     )
 }
